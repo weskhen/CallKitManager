@@ -14,7 +14,7 @@
 
 @property (nonatomic, strong) CXProvider *provider;//管理器
 @property (nonatomic, strong) CXCallUpdate *callUpdate; //信息状态变换更新
-@property (nonatomic, strong) CXProviderConfiguration *configuration; //定义
+@property (nonatomic, strong) CXProviderConfiguration *configuration; //配置
 
 @property (nonatomic, strong) CXCallController *callController; //call 界面
 @property (nonatomic, strong) NSUUID *currentUUID;
