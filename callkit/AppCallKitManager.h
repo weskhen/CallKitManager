@@ -46,10 +46,21 @@ typedef enum : NSUInteger {
 
 /*** 接收方 展示电话呼入等待接收界面 ****/
 - (void)showCallInComingWithName:(NSString *)userName andPhoneNumber:(NSString *)phoneNumber isVideoCall:(BOOL)isVideo;
-/**** 拨打方呼出电话 ****/
+/**** 拨打方 呼出电话 ****/
 - (void)starCallWithUserActivity:(NSUserActivity *)userActivity;
 
 /******* Action **********/
+//拨打方 开始连接
+- (void)startedConnectingOutgoingCall;
+//拨打方 通话连接成功 显示通话时间
+- (void)connectedOutgoingCall;
+//拨打方 结束通话调用
+- (void)endCallAction;
+
+//接听方 结束电话
+- (void)finshCallWithReason:(CXCallEndedReason)reason;
+
+/****** commom *****/
 //禁音通话
 - (void)muteCurrentCall:(BOOL)isMute;
 //保留通话
@@ -58,18 +69,6 @@ typedef enum : NSUInteger {
 - (void)playDTMFCurrentCall:(CXPlayDTMFCallActionType)playType andDigits:(NSString *)digits;
 //设置群组通话
 - (void)setGroupCurrentCallWithGroupUUID:(NSUUID *)groupUUID;
-
-//开始连接 作为拨打方
-- (void)startedConnectingOutgoingCall;
-
-//通话连接成功 显示通话时间 作为拨打方
-- (void)connectedOutgoingCall;
-//拨打方 结束通话调用
-- (void)endCallAction;
-
-//接听方结束电话
-- (void)finshCallWithReason:(CXCallEndedReason)reason;
-
 
 
 @end
