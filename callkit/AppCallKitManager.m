@@ -19,7 +19,7 @@
 @property (nonatomic, strong) CXCallController *callController; //call 界面
 @property (nonatomic, strong) NSUUID *currentUUID;
 @property (nonatomic, assign) BOOL currentIsVideo;
-@property (nonatomic, strong) NSString *currentPhoneNumber; //需要有+号
+@property (nonatomic, strong) NSString *currentPhoneNumber; //需要有+号 主要作为拨打方时没有+区号 是不被系统识别的
 
 @property (nonatomic, assign) BOOL  hasOtherCall;//当前是否存在其他call //如系统电话或其他app的call
 @end
@@ -53,21 +53,48 @@
 - (void)showCallInComingWithName:(NSString *)userName andPhoneNumber:(NSString *)phoneNumber isVideoCall:(BOOL)isVideo
 {
     
-    self.currentIsVideo = isVideo;
-    self.currentPhoneNumber = phoneNumber;
-    
-    CXHandle* handle=[[CXHandle alloc]initWithType:CXHandleTypePhoneNumber value:phoneNumber];
-    self.callUpdate.remoteHandle = handle;
-    _callUpdate.hasVideo = isVideo;
-    _callUpdate.localizedCallerName = userName;
-
-    self.currentUUID = [NSUUID UUID];
-    [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-    [_provider reportNewIncomingCallWithUUID:self.currentUUID update:self.callUpdate completion:^(NSError * _Nullable error) {
-        if (error) {
-            NSLog(@"current error %@",error.userInfo);
+    if (self.currentPhoneNumber) {
+        if ([self.currentPhoneNumber isEqualToString:phoneNumber]) {
+            //同一通话点击
+            
         }
-    }];
+        else
+        {
+            if (self.delegate && [self.delegate respondsToSelector:@selector(refreshCurrentCallStatus:)]) {
+                [self.delegate refreshCurrentCallStatus:CallStatus_Busy];
+            }
+        }
+        if (self.delegate && [self.delegate respondsToSelector:@selector(refreshCurrentCallStatus:)]) {
+            [self.delegate refreshCurrentCallStatus:CallStatus_Busy];
+        }
+    }
+    else
+    {
+        self.currentIsVideo = isVideo;
+        self.currentPhoneNumber = phoneNumber;
+        
+        CXHandle* handle=[[CXHandle alloc]initWithType:CXHandleTypePhoneNumber value:phoneNumber];
+        self.callUpdate.remoteHandle = handle;
+        _callUpdate.hasVideo = isVideo;
+        _callUpdate.localizedCallerName = userName;
+        
+        self.currentUUID = [NSUUID UUID];
+        [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
+        
+        __weak __typeof(self) wself = self;
+        [_provider reportNewIncomingCallWithUUID:self.currentUUID update:self.callUpdate completion:^(NSError * _Nullable error) {
+            if (error) {
+                NSLog(@"current error %@",error.userInfo);
+                //通话创建失败
+                [wself resetVariableData];
+                if (wself.delegate && [wself.delegate respondsToSelector:@selector(refreshCurrentCallStatus:)]) {
+                    [wself.delegate refreshCurrentCallStatus:CallStatus_BuildAnswerFail];
+                }
+
+            }
+        }];
+    }
+    
 }
 
 //拨打方
@@ -102,10 +129,10 @@
     
     // 长按通讯录中联系人号码 person.personHandle.value 读取的是通讯录中的号码 可能不含（+区号）需要自己做简单识别判断
     if ([self.currentPhoneNumber isEqualToString:person.personHandle.value] && self.currentPhoneNumber.length > 0) {
-        //同一个回话
+        //同一个通话
         if (self.currentIsVideo == isVideoCall) {
             //其他的场景不处理:
-            NSLog(@"同一个回话进来，且模式相同 不处理");
+            NSLog(@"同一个通话进来，且模式相同 不处理");
 
         }
         else
@@ -113,22 +140,20 @@
             //根据实际需要来实现  是否需要改变通话性质  一般不直接更新改变 可进去到具体的界面展示后再调整是否视频
             if (self.currentIsVideo) {
                 //从video转voice Call
-                NSLog(@"同一个回话进来，从video转voice Call");
+                NSLog(@"同一个通话进来，从video转voice Call");
             }
             else
             {
                 //从voice转video Call
-                NSLog(@"同一个回话进来，从voice转video Call");
+                NSLog(@"同一个通话进来，从voice转video Call");
                 
             }
-//            self.callUpdate.hasVideo = isVideoCall;
-//            [_provider reportCallWithUUID:_currentUUID updated:self.callUpdate];
-
+            
         }
     }
     else
     {
-        //不同的回话
+        //不同的通话
         if (self.currentPhoneNumber) {
             //已有正在进行中通话  busy
             if (self.delegate && [self.delegate respondsToSelector:@selector(refreshCurrentCallStatus:)]) {
@@ -148,10 +173,22 @@
         CXTransaction *transaction = [[CXTransaction alloc] init];
         [transaction addAction:startCallAction];
         [[AVAudioSession sharedInstance] setCategory:AVAudioSessionCategoryPlayAndRecord error:nil];
-        [self requestTransaction:transaction];
         
-        self.callUpdate.localizedCallerName = @"测试"; //根据phoneNumber 查找当前对应的name 并更新
-        [_provider reportCallWithUUID:_currentUUID updated:self.callUpdate];
+        __weak __typeof(self) wself = self;
+        [_callController requestTransaction:transaction completion:^( NSError *_Nullable error){
+            if (error !=nil) {
+                NSLog(@"Error requesting transaction: %@", error);
+                //通话创建失败
+                [wself resetVariableData];
+                if (wself.delegate && [wself.delegate respondsToSelector:@selector(refreshCurrentCallStatus:)]) {
+                    [wself.delegate refreshCurrentCallStatus:CallStatus_BuildCallerFail];
+                }
+            }
+            else
+            {
+                NSLog(@"Requested transaction successfully");
+            }
+        }];
 
     }
 }

@@ -20,7 +20,7 @@
     // Do any additional setup after loading the view, typically from a nib.
     
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(8 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [[AppCallKitManager sharedInstance] showCallInComingWithName:@"测试wesk痕" andPhoneNumber:@"+8613088888888" isVideoCall:false];
+        [[AppCallKitManager sharedInstance] showCallInComingWithName:@"测试wesk痕" andPhoneNumber:@"13088888888" isVideoCall:false];
         NSLog(@"call coming");
     });
 
