@@ -13,7 +13,7 @@ typedef enum : NSUInteger {
     CallStatus_None,
     CallStatus_BuildCallerFail, //拨打方创建通话失败
     CallStatus_BuildAnswerFail,//接听方创建通话失败
-    CallStatus_End,//通话还没开始就结束
+    CallStatus_End,//在系统通话界面结束
     CallStatus_AnswerEnd,//接听方结束通话
     CallStatus_CallerEnd,//拨打方结束通话
     CallStatus_TimeOut,//等待超时

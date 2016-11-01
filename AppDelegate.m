@@ -53,9 +53,15 @@
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         while (true) {
             float remainingTime = [application backgroundTimeRemaining];
-            NSLog(@"remaining background time:%f", remainingTime);
-            [NSThread sleepForTimeInterval:1.0];
-            if (remainingTime <= 3.0 || self.inForeground) {
+            if (remainingTime <= 3*60) {
+                NSLog(@"remaining background time:%f", remainingTime);
+                [NSThread sleepForTimeInterval:1.0];
+                if (remainingTime <= 3.0 || self.inForeground) {
+                    break;
+                }
+            }
+            else
+            {
                 break;
             }
         }

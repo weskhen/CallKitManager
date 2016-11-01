@@ -337,7 +337,7 @@
     [action fulfill];
 }
 
-//拨打方挂断或被叫方拒绝接听
+//拨打方挂断或被叫方拒绝接听 锁屏情况下接通通话到最后挂断
 - (void)provider:(CXProvider *)provider performEndCallAction:(CXEndCallAction *)action
 {
     //结束通话
@@ -347,7 +347,7 @@
     [self resetVariableData];//通话结束
 
     [action fulfill]; //通话结束立即执行 时间也可以选
-    NSLog(@"CallKit----通话未开始就结束");
+    NSLog(@"CallKit----在系统通话界面结束");
     
 }
 - (void)provider:(CXProvider *)provider performSetHeldCallAction:(CXSetHeldCallAction *)action
