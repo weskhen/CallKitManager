@@ -491,14 +491,14 @@
 - (CXProviderConfiguration *)configuration
 {
     if (!_configuration) {
-        //        NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
+//        NSString *appName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleDisplayName"];
         _configuration = [[CXProviderConfiguration alloc] initWithLocalizedName:@"test"];//一般是app名字
         _configuration.supportedHandleTypes = [[NSSet alloc] initWithObjects:@(CXHandleTypePhoneNumber), nil]; //不加这一行 系统电话号码长按不会出现当前app的名字（坑） 也可以支持邮件 根据app的功能来选
         NSString *iconPath = [[NSBundle mainBundle] pathForResource:@"callkitIcon" ofType:@"png"];
         _configuration.iconTemplateImageData = [NSData dataWithContentsOfFile:iconPath];//锁屏图标 40*40 px
         NSString *ringPath = [[NSBundle mainBundle] pathForResource:@"ringtone" ofType:@"mp3"];
         _configuration.ringtoneSound = ringPath; //这是个亮点 打电话的app可以做到自定义来电铃声
-        _configuration.maximumCallGroups = 0;
+        _configuration.maximumCallGroups = 1;//这个不能为0
         _configuration.supportsVideo = YES;
     }
     return _configuration;
@@ -508,8 +508,8 @@
 {
     if (!_callUpdate) {
         _callUpdate = [CXCallUpdate new];
-        //        _callUpdate.supportsGrouping = false;
-        //        _callUpdate.supportsUngrouping = true;
+//        _callUpdate.supportsGrouping = false;
+//        _callUpdate.supportsUngrouping = true;
         _callUpdate.supportsHolding = true; //默认不同时支持其他来电
     }
     return _callUpdate;
