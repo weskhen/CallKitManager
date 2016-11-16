@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AE43B6F11DDC4B8A00DC7526 /* Intents.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AE43B6F01DDC4B8A00DC7526 /* Intents.framework */; };
 		AE72F4C91DC720310043BA08 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = AE72F4C81DC720310043BA08 /* main.m */; };
 		AE72F4CC1DC720310043BA08 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AE72F4CB1DC720310043BA08 /* AppDelegate.m */; };
 		AE72F4CF1DC720310043BA08 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = AE72F4CE1DC720310043BA08 /* ViewController.m */; };
@@ -19,6 +20,7 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AE43B6F01DDC4B8A00DC7526 /* Intents.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Intents.framework; path = System/Library/Frameworks/Intents.framework; sourceTree = SDKROOT; };
 		AE72F4C41DC720310043BA08 /* callkitManager.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = callkitManager.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		AE72F4C81DC720310043BA08 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		AE72F4CA1DC720310043BA08 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
@@ -40,17 +42,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AE43B6F11DDC4B8A00DC7526 /* Intents.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		AE43B6EF1DDC4B8A00DC7526 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				AE43B6F01DDC4B8A00DC7526 /* Intents.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		AE72F4BB1DC720310043BA08 = {
 			isa = PBXGroup;
 			children = (
 				AE72F4C61DC720310043BA08 /* callkitManager */,
 				AE72F4C51DC720310043BA08 /* Products */,
+				AE43B6EF1DDC4B8A00DC7526 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
